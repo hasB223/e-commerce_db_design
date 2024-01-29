@@ -1,0 +1,120 @@
+CREATE TABLE orders (
+order_id INTEGER,
+user_id INTEGER NOT NULL,
+created_at NUMERIC NOT NULL,
+PRIMARY KEY (order_id),
+FOREIGN KEY (user_id) REFERENCES users(user_id)
+)
+
+CREATE TABLE productCategories (
+category_id INTEGER,
+category_name TEXT NOT NULL,
+category_description TEXT NOT NULL,
+PRIMARY KEY (category_id)
+)
+
+CREATE TABLE shops (
+shop_id INTEGER,
+shop_name TEXT NOT NULL,
+PRIMARY KEY (shop_id)
+)
+
+CREATE TABLE products (
+product_id INTEGER,
+category_id INTEGER NOT NULL,
+shop_id INTEGER NOT NULL,
+product_name TEXT NOT NULL,
+product_description TEXT,
+product_price DECIMAL NOT NULL,
+product_quantity INTEGER NOT NULL,
+product_discount DECIMAL,
+product_manufacturer TEXT,
+last_updated NUMERIC,
+PRIMARY KEY (product_id),
+FOREIGN KEY (category_id) REFERENCES productCategories(category_id),
+FOREIGN KEY (shop_id) REFERENCES shops(shop_id)
+)
+
+CREATE TABLE orderDetails (
+orderdetail_id INTEGER,
+order_id INTEGER NOT NULL,
+product_id INTEGER NOT NULL,
+orderdetail_quantity INTEGER NOT NULL,
+orderdetail_price DECIMAL NOT NULL,
+PRIMARY KEY (orderdetail_id),
+FOREIGN KEY (order_id) REFERENCES orders(order_id),
+FOREIGN KEY (product_id) REFERENCES products(product_id)
+
+)
+
+CREATE TABLE shipments (
+shipment_id INTEGER,
+order_id INTEGER NOT NULL,
+ship_track_number TEXT NOT NULL,
+shipment_date NUMERIC NOT NULL,
+shipment_details TEXT,
+PRIMARY KEY (shipment_id),
+FOREIGN KEY (order_id) REFERENCES orders(order_id)
+)
+
+CREATE TABLE users (
+user_id INTEGER,
+username TEXT,
+password TEXT NOT NULL,
+first_name TEXT NOT NULL,
+last_name TEXT,
+email TEXT NOT NULL,
+phone INTEGER NOT NULL,
+registered_at NUMERIC NOT NULL,
+last_login NUMERIC NOT NULL,
+PRIMARY KEY (user_id)
+)
+
+CREATE TABLE userAddress (
+address_id INTEGER,
+user_id INTEGER NOT NULL,
+address_line1 TEXT NOT NULL,
+address_line2 TEXT,
+city TEXT NOT NULL,
+postal_code INTEGER NOT NULL,
+country TEXT NOT NULL,
+phone INTEGER NOT NULL,
+last_updated NUMERIC NOT NULL,
+PRIMARY KEY (address_id),
+FOREIGN KEY (user_id) REFERENCES users(user_id)
+)
+
+CREATE TABLE payments (
+payment_id INTEGER,
+order_id INTEGER NOT NULL,
+trans_ref_number TEXT NOT NULL,
+invoice_number INTEGER NOT NULL,
+invoice_status TEXT NOT NULL,
+invoice_date NUMERIC NOT NULL,
+invoice_details TEXT,
+payment_mode TEXT NOT NULL,
+payment_status TEXT NOT NULL,
+payment_date NUMERIC NOT NULL,
+payment_details TEXT,
+PRIMARY KEY (payment_id),
+FOREIGN KEY (order_id) REFERENCES orders(order_id)
+)
+
+CREATE TABLE shopOwners (
+user_id INTEGER NOT NULL,
+shop_id INTEGER NOT NULL,
+FOREIGN KEY (user_id) REFERENCES users(user_id),
+FOREIGN KEY (shop_id) REFERENCES shops(shop_id)
+)
+
+CREATE TABLE productReviews (
+review_id INTEGER,
+orderdetail_id INTEGER NOT NULL,
+rating DECIMAL NOT NULL,
+review_title TEXT NOT NULL,
+review_content TEXT,
+review_time NUMERIC NOT NULL,
+PRIMARY KEY (review_id),
+FOREIGN KEY (orderdetail_id) REFERENCES orderDetails(orderdetail_id)
+)
+
